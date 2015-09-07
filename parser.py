@@ -1,5 +1,6 @@
 from inspect import getmembers, isfunction, getdoc
 from enum import Enum
+import random
 
 import utilities
 
@@ -16,6 +17,24 @@ class PayloadType(Enum):
     NONE         = 'none'
 
 class Commands():
+    @staticmethod
+    def roll(cmd, args):
+        "Roll the dice!\n !roll [number] d [sides]"
+        roll = args.replace(" ", "")
+        num, sides = roll.split('d')
+
+        num = int(num)
+        sides = int(sides)
+
+        if (sides >= 1) and (sides <= 9999) and (num >= 1) and (num <= 9999):
+            roll = sum(random.randrange(sides)+1 for die in range(num))
+
+        return Payload(
+                0,
+                PayloadType.CHAT_MESSAGE,
+                str(roll)
+                )
+
     @staticmethod
     def about(cmd, args):
         "General information about this bot"
