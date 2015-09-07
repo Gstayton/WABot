@@ -7,6 +7,7 @@ from yowsup.layers.protocol_receipts           import YowReceiptProtocolLayer
 from yowsup.layers.protocol_acks               import YowAckProtocolLayer
 from yowsup.layers.network                     import YowNetworkLayer
 from yowsup.layers.coder                       import YowCoderLayer
+from yowsup.layers.protocol_iq                 import YowIqProtocolLayer
 from yowsup.stacks import YowStack
 from yowsup.common import YowConstants
 from yowsup.layers import YowLayerEvent
@@ -18,7 +19,7 @@ from credentials import CREDENTIALS
 if __name__==  "__main__":
     layers = (
         EchoLayer,
-        (YowAuthenticationProtocolLayer, YowMessagesProtocolLayer, YowReceiptProtocolLayer, YowAckProtocolLayer)
+        (YowAuthenticationProtocolLayer, YowMessagesProtocolLayer, YowReceiptProtocolLayer, YowAckProtocolLayer,  YowIqProtocolLayer)
     ) + YOWSUP_CORE_LAYERS
 
     stack = YowStack(layers)
@@ -29,4 +30,4 @@ if __name__==  "__main__":
 
     stack.broadcastEvent(YowLayerEvent(YowNetworkLayer.EVENT_STATE_CONNECT))   #sending the connect signal
 
-    stack.loop() #this is the program mainloop
+    stack.loop(timeout=0.5, discrete=0.5) #this is the program mainloop
