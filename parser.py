@@ -14,9 +14,19 @@ class Payload:
 
 class PayloadType(Enum):
     CHAT_MESSAGE = 'chatmsg'
+    SYS_MESSAGE  = 'sysmsg'
     NONE         = 'none'
 
 class Commands():
+    @staticmethod
+    def reload(cmd, args):
+        "Reload command parser module"
+        return Payload(
+                0,
+                PayloadType.SYS_MESSAGE,
+                'reload'
+                )
+
     @staticmethod
     def roll(cmd, args):
         "Roll the dice!\n !roll [number] d [sides]"
