@@ -100,7 +100,7 @@ class Commands():
             for f in func_list:
                 helpText += Chat.cmdChar + f[0] + ", "
 
-            helpText += "\nFor more info, try !help [command]"
+            helpText += "\nFor more info, try {0}help [command]".format(Chat.cmdChar)
 
         return Payload(
                 0,
@@ -109,7 +109,7 @@ class Commands():
                 )
 
 class Chat():
-    cmdChar = "!"
+    cmdChar = "/"
     def __init__(self):
         self.commands = {}
 
