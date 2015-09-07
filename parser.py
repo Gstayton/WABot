@@ -38,17 +38,19 @@ class Commands():
         except:
             return Payload(
                     1,
-                    PayloadType.NONE,
-                    None
+                    PayloadType.CHAT_MESSAGE,
+                    "Malformed request, syntax is [number] d [sides]"
                     )
 
         if (sides >= 1) and (sides <= 9999) and (num >= 1) and (num <= 9999):
-            roll = sum(random.randrange(sides)+1 for die in range(num))
+            result = sum(random.randrange(sides)+1 for die in range(num))
+        else:
+            result = "Invalid request, check your syntax."
 
         return Payload(
                 0,
                 PayloadType.CHAT_MESSAGE,
-                str(roll)
+                str(result)
                 )
 
     @staticmethod
