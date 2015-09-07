@@ -31,10 +31,16 @@ class Commands():
     def roll(cmd, args):
         "Roll the dice!\n !roll [number] d [sides]"
         roll = args.replace(" ", "")
-        num, sides = roll.split('d')
-
-        num = int(num)
-        sides = int(sides)
+        num, sides = roll.partition('d')[::2]
+        try:
+            num = int(num)
+            sides = int(sides)
+        except:
+            return Payload(
+                    1,
+                    PayloadType.NONE,
+                    None
+                    )
 
         if (sides >= 1) and (sides <= 9999) and (num >= 1) and (num <= 9999):
             roll = sum(random.randrange(sides)+1 for die in range(num))
