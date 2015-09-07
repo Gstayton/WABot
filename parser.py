@@ -1,6 +1,6 @@
-from inspect import getmembers, isfunction
-from helpers import Chat
+from inspect import getmembers, isfunction, getdoc
 from enum import Enum
+
 import utilities
 
 class Payload:
@@ -17,7 +17,21 @@ class PayloadType(Enum):
 
 class Commands():
     @staticmethod
+    def about(cmd, args):
+        "General information about this bot"
+        message = "A bot for WhatsApp written in Python by Nathan Thomas (AKA Kosan Nicholas)\n"
+        message += "Source available at http://github.com/Gstayton/WABot\n"
+        message += "Current version: 0.0.2"
+
+        return Payload(
+                0,
+                PayloadType.CHAT_MESSAGE,
+                message
+                )
+
+    @staticmethod
     def ping(cmd, args):
+        "Check alive status of bot"
         return Payload(
                 0,
                 PayloadType.CHAT_MESSAGE,
@@ -26,6 +40,10 @@ class Commands():
 
     @staticmethod
     def ud_define(cmd, args):
+        """
+        !ud_define [search term]
+        Returns the first result from urbandictionary.com for [search term], truncated to 300 characters or less
+        """
         define = utilities.Urban.search(args, 300)
         return Payload(
                 0,
@@ -33,10 +51,37 @@ class Commands():
                 define
                 )
 
+    @staticmethod
+    def help(cmd, args):
+        "Display available commands"
+        func_list = [o for o in getmembers(Commands) if isfunction(o[1])]
+        helpText = ""
+        if args:
+            if " " in args:
+                helpText = "Invalid search"
+            else:
+                for f in func_list:
+                    if args.lower() == f[0] and getdoc(f[1]):
+                        helpText = "Usage for {0}{1}: \n".format(Chat.cmdChar, args)
+                        helpText += getdoc(f[1])
+                if not helpText:
+                    helpText = "No help available for '{0}'".format(args)
+        else:
+            helpText = "Currently implemented commands: \n"
+            for f in func_list:
+                helpText += Chat.cmdChar + f[0] + ", "
+
+            helpText += "\nFor more info, try !help [command]"
+
+        return Payload(
+                0,
+                PayloadType.CHAT_MESSAGE,
+                helpText
+                )
 
 class Chat():
+    cmdChar = "!"
     def __init__(self):
-        self.cmdChar = "!"
         self.commands = {}
 
         func_list = [o for o in getmembers(Commands) if isfunction(o[1])]
